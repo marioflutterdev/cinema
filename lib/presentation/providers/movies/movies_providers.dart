@@ -3,14 +3,6 @@ import 'package:cinemapedia/presentation/providers/movies/movies_repository_prov
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
-final nowPlayingMoviesProvider = StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
-
-  final fetchMoreMovies = ref.watch( movieRepositoryProvider ).getNowPlaying;
-
-  return MoviesNotifier(
-    fetchMoreMovies: fetchMoreMovies
-  );
-});
 
 
 
@@ -34,4 +26,13 @@ class MoviesNotifier extends StateNotifier<List<Movie>> {
 
 
 }
+final nowPlayingMoviesProvider = StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
+
+  final fetchMoreMovies = ref.watch( movieRepositoryProvider ).getNowPlaying;
+
+  return MoviesNotifier(
+    fetchMoreMovies: fetchMoreMovies
+  );
+});
+
 
