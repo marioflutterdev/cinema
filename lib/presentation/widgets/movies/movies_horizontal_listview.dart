@@ -17,20 +17,23 @@ class MoviesHorizontalListview extends StatefulWidget {
       this.loadNextPage});
 
   @override
-  State<MoviesHorizontalListview> createState() => _MoviesHorizontalListviewState();
+  State<MoviesHorizontalListview> createState() =>
+      _MoviesHorizontalListviewState();
 }
 
 class _MoviesHorizontalListviewState extends State<MoviesHorizontalListview> {
-  final scrollController =  ScrollController();
+  final scrollController = ScrollController();
   @override
   void initState() {
     scrollController.addListener(() {
-        if(scrollController.position.pixels + 300  >=  scrollController.position.maxScrollExtent){
-          widget.loadNextPage!();
-        }
-      });
+      if (scrollController.position.pixels + 300 >=
+          scrollController.position.maxScrollExtent) {
+        widget.loadNextPage!();
+      }
+    });
     super.initState();
   }
+
   @override
   void dispose() {
     scrollController.dispose();
@@ -40,24 +43,28 @@ class _MoviesHorizontalListviewState extends State<MoviesHorizontalListview> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 350,
-      child: Column(
-        children: [
-          if (widget.title != null || widget.subtTitle != null)
-            _Header(
-              title: widget.title,
-              subTitle: widget.subtTitle,
-            ),
-          Expanded(
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: widget.movies.length,
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) => _Slide(movie: widget.movies[index]),
-            ),
-          )
-        ],
+      height: 380,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 15),
+        child: Column(
+          children: [
+            if (widget.title != null || widget.subtTitle != null)
+              _Header(
+                title: widget.title,
+                subTitle: widget.subtTitle,
+              ),
+            Expanded(
+              child: ListView.builder(
+                controller: scrollController,
+                itemCount: widget.movies.length,
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) =>
+                    _Slide(movie: widget.movies[index]),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -118,13 +125,15 @@ class _Slide extends StatelessWidget {
                         ? child
                         : const SizedBox(
                             width: 150,
-                            child: CircularProgressIndicator(),
+                            height: 200,
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              strokeAlign: 0.1,
+                            )),
                           ),
               ),
             ),
           ),
-
-
           SizedBox(
             width: 150,
             child: Text(
@@ -133,9 +142,7 @@ class _Slide extends StatelessWidget {
               style: titleStyle.titleSmall,
             ),
           ),
-
           const Spacer(),
-
           SizedBox(
             width: 150,
             child: Row(

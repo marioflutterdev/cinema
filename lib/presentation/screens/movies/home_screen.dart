@@ -32,28 +32,73 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     super.initState();
 
     ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+    ref.read(popularMoviesProvider.notifier).loadNextPage();
+    ref.read(topratedMoviesProvider.notifier).loadNextPage();
+    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
   }
 
   @override
   Widget build(BuildContext context) {
-    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
-    final moviesSlideshow = ref.watch(moviesSlideshowProvider);
+    final initialLoading = ref.watch(initialLoadingProvider);
+    
+    if (initialLoading ) return const FullScreenLoader();
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const CustomAppbar(),
-          MoviesSlideshow(movies: moviesSlideshow),
-          MoviesHorizontalListview(
-            movies: nowPlayingMovies,
-            title: "En Cines",
-            subtTitle: "Lunes 20",
-            loadNextPage: () {
-              ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
-            },
+    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+    final popularMovies = ref.watch(popularMoviesProvider);
+    final upcomingMovies = ref.watch(upcomingMoviesProvider);
+    final topRatedMovies = ref.watch(topratedMoviesProvider);
+    final moviesSlideshow = ref.watch(moviesSlideshowProvider);
+  
+    return CustomScrollView(
+      slivers: [
+        
+        const SliverAppBar(
+          floating: true,
+          flexibleSpace: FlexibleSpaceBar(
+            title: CustomAppbar(),
           ),
-        ],
-      ),
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => Column(
+              children: [
+                MoviesSlideshow(movies: moviesSlideshow),
+                MoviesHorizontalListview(
+                  movies: nowPlayingMovies,
+                  title: "En Cines",
+                  subtTitle: "Lunes 20",
+                  loadNextPage: () {
+                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                  },
+                ),
+                MoviesHorizontalListview(
+                  movies: topRatedMovies,
+                  title: "Top Raking",
+                  loadNextPage: () {
+                    ref.read(topratedMoviesProvider.notifier).loadNextPage();
+                  },
+                ),
+                MoviesHorizontalListview(
+                  movies: upcomingMovies,
+                  title: "Proximamente",
+                  loadNextPage: () {
+                    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
+                  },
+                ),
+                MoviesHorizontalListview(
+                  movies: popularMovies,
+                  title: "Populares",
+                  subtTitle: "Lunes 20",
+                  loadNextPage: () {
+                    ref.read(popularMoviesProvider.notifier).loadNextPage();
+                  },
+                ),
+              ],
+            ),
+            childCount: 1,
+          ),
+        )
+      ],
     );
   }
 }
