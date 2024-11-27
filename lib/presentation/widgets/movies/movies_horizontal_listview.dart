@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:cinemapedia/config/helpers/human_formats.dart';
+import 'package:cinemapedia/config/router/app_router.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:go_router/go_router.dart';
 
 class MoviesHorizontalListview extends StatefulWidget {
   final List<Movie> movies;
@@ -120,17 +124,23 @@ class _Slide extends StatelessWidget {
                 width: 150,
                 movie.posterPath,
                 fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) =>
-                    loadingProgress == null
-                        ? child
-                        : const SizedBox(
-                            width: 150,
-                            height: 200,
-                            child: Center(
-                                child: CircularProgressIndicator(
-                              strokeAlign: 0.1,
-                            )),
-                          ),
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress != null) {
+                    return const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    );
+                  
+                  }
+                  return GestureDetector(
+                    onTap: () =>  context.push('/movie/${movie.id}'),
+                    child: child,
+                  );
+                },
               ),
             ),
           ),
