@@ -7,6 +7,6 @@ class ActorsMapper {
       name: cast.name,
       profilePath: cast.profilePath != null
           ? 'https://image.tmdb.org/t/p/w500${cast.profilePath}'
-          : 'https://i.pinimg.com/originals/ac/11/aa/ac11aa2add3b0193c8769e0a17d13535.jpg',
+          : 'https://www.engineering.iastate.edu/people/files/2020/01/no-photo.jpg',
       character: cast.character);
 }

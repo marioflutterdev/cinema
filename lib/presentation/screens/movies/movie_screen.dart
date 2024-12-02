@@ -1,4 +1,6 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/presentation/providers/movies/movie_info_provider.dart';
+import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,6 +21,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
   void initState() {
     super.initState();
     ref.read(movieInfoProvider.notifier).loadMovie(widget.movieId);
+    ref.read(actorsByMovieProvider.notifier).getActorsByMovie(widget.movieId);
   }
 
   @override
@@ -135,9 +138,68 @@ class _SliverListMovieDescription extends StatelessWidget {
           (context, index) => Column(
                 children: [
                   _BodyDescriptionMovie(movie: movie),
+                   _ActorsListView( movieId: movie.id.toString(),)
                 ],
               ),
           childCount: 1),
+    );
+  }
+}
+
+class _ActorsListView extends ConsumerWidget {
+
+  final String movieId;
+  const _ActorsListView( 
+    {
+      required this.movieId,
+  });
+
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final size = MediaQuery.of(context).size;
+    final actorsByMovie = ref.watch(actorsByMovieProvider);
+
+    
+    if( actorsByMovie[movieId] == null){
+      return const CircularProgressIndicator(strokeWidth: 2);
+    }
+    final actors = actorsByMovie[movieId];
+
+    
+    return SizedBox(
+      height: size.height * 0.35,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: actors!.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: double.infinity,
+              width: size.width * 0.3 ,
+              child: FadeInRight(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.network(
+                        actors[index].profilePath,
+                        fit: BoxFit.cover,
+                        width: size.width * 0.3,
+                        height: size.width * 0.5,
+                      ),
+                    ),
+                    Text(actors[index].name),
+                    Text(actors[index].character!, style: const TextStyle(fontWeight:FontWeight.bold ),),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -156,8 +218,7 @@ class _BodyDescriptionMovie extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
