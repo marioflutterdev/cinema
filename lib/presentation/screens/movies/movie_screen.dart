@@ -145,7 +145,62 @@ class _SliverListMovieDescription extends StatelessWidget {
     );
   }
 }
+class _BodyDescriptionMovie extends StatelessWidget {
+  const _BodyDescriptionMovie({
+    required this.movie,
+  });
 
+  final Movie movie;
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final textStyle = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.network(
+                  movie.posterPath,
+                  fit: BoxFit.cover,
+                  width: size.width * 0.3,
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 20),
+                width: size.width * 0.7 - 50,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(movie.originalTitle, style: textStyle.titleLarge),
+                    Text(movie.overview, style: textStyle.titleSmall)
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Wrap(
+            children: [
+              ...movie.genreIds.map(
+                (e) => Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  child: Chip(label: Text(e)),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
 class _ActorsListView extends ConsumerWidget {
 
   final String movieId;
@@ -199,63 +254,6 @@ class _ActorsListView extends ConsumerWidget {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class _BodyDescriptionMovie extends StatelessWidget {
-  const _BodyDescriptionMovie({
-    required this.movie,
-  });
-
-  final Movie movie;
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final textStyle = Theme.of(context).textTheme;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.network(
-                  movie.posterPath,
-                  fit: BoxFit.cover,
-                  width: size.width * 0.3,
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 20),
-                width: size.width * 0.7 - 50,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(movie.originalTitle, style: textStyle.titleLarge),
-                    Text(movie.overview, style: textStyle.titleSmall)
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Wrap(
-            children: [
-              ...movie.genreIds.map(
-                (e) => Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                  child: Chip(label: Text(e)),
-                ),
-              )
-            ],
-          )
-        ],
       ),
     );
   }
