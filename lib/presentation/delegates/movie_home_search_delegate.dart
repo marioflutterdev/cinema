@@ -9,28 +9,30 @@ typedef SearchMovieCallBack = Future<List<Movie>> Function(String query);
 
 class MovieHomeSearchDelegate extends SearchDelegate<Movie?> {
   final SearchMovieCallBack searchMovies;
+  final List<Movie> initialMovies;
+
+  MovieHomeSearchDelegate({
+    required this.initialMovies,
+    required this.searchMovies,
+  }):super(
+    searchFieldLabel: 'Buscar Películas'
+  );
+
   final StreamController<List<Movie>> debouncedMovies =
       StreamController.broadcast();
   Timer? debounceTimer;
-
-  MovieHomeSearchDelegate({
-    required this.searchMovies,
-  });
-
-  void clearStreams(){
+  
+  void clearStreams() {
     debouncedMovies.close();
   }
 
   void _onQueryDebounce(String query) {
     if (debounceTimer?.isActive ?? false) debounceTimer!.cancel();
 
-    debounceTimer =  Timer(
+    debounceTimer = Timer(
       const Duration(milliseconds: 500),
       () async {
-        if(query.isEmpty){
-          debouncedMovies.add([]);
-          return;
-        }
+        
 
         final movies = await searchMovies(query);
         debouncedMovies.add(movies);
@@ -38,9 +40,7 @@ class MovieHomeSearchDelegate extends SearchDelegate<Movie?> {
     );
   }
 
-  @override
-  String get searchFieldLabel => "Buscar Película";
-
+  
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -66,7 +66,7 @@ class MovieHomeSearchDelegate extends SearchDelegate<Movie?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Text("buildSuggestions");
+    return const Text("buildSuggestions");
   }
 
   @override
@@ -74,15 +74,17 @@ class MovieHomeSearchDelegate extends SearchDelegate<Movie?> {
     _onQueryDebounce(query);
 
     return StreamBuilder(
+      initialData: initialMovies,
       stream: debouncedMovies.stream,
       builder: (context, snapshot) {
         final movies = snapshot.data ?? [];
         return ListView.builder(
           itemCount: movies.length,
           itemBuilder: (context, index) => FadeInUp(
+            duration: const Duration(milliseconds: 300 ),
             child: _MovieInfo(
               movie: movies[index],
-              onMovieselected: (context, movie){
+              onMovieselected: (context, movie) {
                 clearStreams();
                 close(context, movie);
               },
