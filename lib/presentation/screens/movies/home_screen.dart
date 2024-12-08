@@ -1,104 +1,46 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:cinemapedia/presentation/view/view.dart';
 import 'package:cinemapedia/presentation/widgets/widgets.dart';
-import '../../providers/providers.dart';
 
-class HomeScreen extends StatelessWidget {
+const List<Widget> view = [HomeView(), CategoriesView(), FavoriteView()];
+
+class HomeScreen extends StatefulWidget {
+  final Widget child ;
+
   static const name = 'home-screen';
-
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: _HomeView(),
-      bottomNavigationBar: CustomBottomNavigator(),
-    );
-  }
-}
-
-class _HomeView extends ConsumerStatefulWidget {
-  const _HomeView();
+  const HomeScreen({
+    super.key,
+    required this.child,
+  });
 
   @override
-  _HomeViewState createState() => _HomeViewState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeViewState extends ConsumerState<_HomeView> {
+class _HomeScreenState extends State<HomeScreen> {
+  /* late PageController pageController;
   @override
   void initState() {
+    pageController = PageController(
+      keepPage: true
+    );
     super.initState();
-
-    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
-    ref.read(popularMoviesProvider.notifier).loadNextPage();
-    ref.read(topratedMoviesProvider.notifier).loadNextPage();
-    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
-  }
-
+  } */
   @override
   Widget build(BuildContext context) {
-    final initialLoading = ref.watch(initialLoadingProvider);
+    print(widget.child);
+   /*  if(pageController.hasClients){
+    pageController.animateTo(
+      1,
+      curve: Curves.easeInOut,
+      duration: const Duration(milliseconds: 300),
+    );
+    } */
     
-    if (initialLoading ) return const FullScreenLoader();
-
-    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
-    final popularMovies = ref.watch(popularMoviesProvider);
-    final upcomingMovies = ref.watch(upcomingMoviesProvider);
-    final topRatedMovies = ref.watch(topratedMoviesProvider);
-    final moviesSlideshow = ref.watch(moviesSlideshowProvider);
-  
-    return CustomScrollView(
-      slivers: [
-        
-        const SliverAppBar(
-          floating: true,
-          flexibleSpace: FlexibleSpaceBar(
-            titlePadding: EdgeInsets.zero,
-            title: CustomAppbar(),
-          ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) => Column(
-              children: [
-                MoviesSlideshow(movies: moviesSlideshow),
-                MoviesHorizontalListview(
-                  movies: nowPlayingMovies,
-                  title: "En Cines",
-                  loadNextPage: () {
-                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
-                  },
-                ),
-                MoviesHorizontalListview(
-                  movies: topRatedMovies,
-                  title: "Top Raking",
-                  loadNextPage: () {
-                    ref.read(topratedMoviesProvider.notifier).loadNextPage();
-                  },
-                ),
-                MoviesHorizontalListview(
-                  movies: upcomingMovies,
-                  title: "Proximamente",
-                  loadNextPage: () {
-                    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
-                  },
-                ),
-                MoviesHorizontalListview(
-                  movies: popularMovies,
-                  title: "Populares",
-                  subtTitle: "Lunes 20",
-                  loadNextPage: () {
-                    ref.read(popularMoviesProvider.notifier).loadNextPage();
-                  },
-                ),
-              ],
-            ),
-            childCount: 1,
-          ),
-        )
-      ],
+    return Scaffold(
+      body: widget.child,
+      bottomNavigationBar: const CustomBottomNavigator(),
     );
   }
 }
