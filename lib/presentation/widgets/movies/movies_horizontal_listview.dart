@@ -1,10 +1,10 @@
-import 'package:animate_do/animate_do.dart';
-import 'package:cinemapedia/config/router/app_router.dart';
-import 'package:cinemapedia/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
-import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:cinemapedia/presentation/widgets/widgets.dart';
+import 'package:cinemapedia/domain/entities/movie.dart';
 
 class MoviesHorizontalListview extends StatefulWidget {
   final List<Movie> movies;

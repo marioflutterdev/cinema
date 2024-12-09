@@ -36,56 +36,59 @@ class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClien
     final topRatedMovies = ref.watch(topratedMoviesProvider);
     final moviesSlideshow = ref.watch(moviesSlideshowProvider);
   
-    return CustomScrollView(
-      slivers: [
-        
-        const SliverAppBar(
-          floating: true,
-          flexibleSpace: FlexibleSpaceBar(
-            titlePadding: EdgeInsets.zero,
-            title: CustomAppbar(),
-          ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) => Column(
-              children: [
-                MoviesSlideshow(movies: moviesSlideshow),
-                MoviesHorizontalListview(
-                  movies: nowPlayingMovies,
-                  title: "En Cines",
-                  loadNextPage: () {
-                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
-                  },
-                ),
-                MoviesHorizontalListview(
-                  movies: topRatedMovies,
-                  title: "Top Raking",
-                  loadNextPage: () {
-                    ref.read(topratedMoviesProvider.notifier).loadNextPage();
-                  },
-                ),
-                MoviesHorizontalListview(
-                  movies: upcomingMovies,
-                  title: "Proximamente",
-                  loadNextPage: () {
-                    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
-                  },
-                ),
-                MoviesHorizontalListview(
-                  movies: popularMovies,
-                  title: "Populares",
-                  subtTitle: "Lunes 20",
-                  loadNextPage: () {
-                    ref.read(popularMoviesProvider.notifier).loadNextPage();
-                  },
-                ),
-              ],
+    return 
+     CustomScrollView(
+        slivers: [
+          
+          const SliverAppBar(
+            floating: true,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: EdgeInsets.zero,
+              title: CustomAppbar(),
             ),
-            childCount: 1,
           ),
-        )
-      ],
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => Column(
+                children: [
+                  MoviesSlideshow(movies: moviesSlideshow),
+                  MoviesHorizontalListview(
+                    movies: nowPlayingMovies,
+                    title: "En Cines",
+                    loadNextPage: () {
+                      ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+                  MoviesHorizontalListview(
+                    movies: topRatedMovies,
+                    title: "Top Raking",
+                    loadNextPage: () {
+                      ref.read(topratedMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+                  MoviesHorizontalListview(
+                    movies: upcomingMovies,
+                    title: "Proximamente",
+                    loadNextPage: () {
+                      ref.read(upcomingMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+                  MoviesHorizontalListview(
+                    movies: popularMovies,
+                    title: "Populares",
+                    subtTitle: "Lunes 20",
+                    loadNextPage: () {
+                      ref.read(popularMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+                ],
+              ),
+              childCount: 1,
+            ),
+          )
+        ],
+      
+     
     );
   }
   
